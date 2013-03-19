@@ -10,24 +10,56 @@
 
 
 //--- @interface section---
+@interface Customer: NSObject
+
+@property (nonatomic, copy) NSString *firstname;
+@property (nonatomic, copy) NSString *lastname;
+@property (nonatomic, copy) NSString *status;
+
+-(void) printCustomer;
+
+@end
 
 
-@interface Account: NSObject
 
-//define property variables
+@interface Account: Customer
+
 @property int Withdrawal, Deposit, BeginBalance, EndBalance, AcctNum, TransactionCode, totalWithdrawal, totalDeposit;
-@property (nonatomic, copy) NSString *name;
+@property (nonatomic, copy) NSString *owner;
 
-//declare methods
 -(void) print;
 -(void) AddDeposit: (int) d;
 -(void) SubtractWithdrawal: (int) w;
--(int) AddTotalDeposit: (int) D;
--(int) SubtractTotalWithdrawal: (int) W;
+-(void) printAccount;
+//-(int) AddTotalDeposit: (int) D;
+//-(int) SubtractTotalWithdrawal: (int) W;
 
 
 @end
 
+
+
+@interface Savings: Account
+
+@property float interestRate, interest, averageBalance;
+
+-(void) printSavings;
+-(void) computeAverageBalance;
+-(void) computeInterest;
+
+@end
+
+
+@interface Checking: Savings
+
+@property float interestRate, interest, averageBalance, lowBalance, highBalance, fee;
+
+-(void) printChecking;
+-(void) computeAverageBalance;
+-(void) computeInterest;
+-(void) computeFee;
+
+@end
 
 
 //
@@ -42,31 +74,43 @@
 
 //---@implementation section---
 
+@implementation Customer
+
+@synthesize firstname, lastname, status;
+
+-(void) printCustomer
+{
+    NSLog (@"Last Name: %@  First Name: %@  Status: %@" lastname, firstname, status);
+}
+
+@end
+
 
 
 @implementation Account
 
 //synthesize variables
 @synthesize Withdrawal, Deposit, BeginBalance, EndBalance, AcctNum, TransactionCode, totalDeposit, totalWithdrawal;
-@synthesize name;
+@synthesize owner;
 
-//define print method
--(void) print
+
+-(void) printAccount
 {
+    [Customer printCustomer];
     
     if (EndBalance > 0)
     {
-        NSLog(@"\nAccount Number: %i \nName: %@ \nBeginning Balance: %i \nTotal Deposit: %i \nTotal Withdrawal: %i \nEnding Balance: %i\n\n", AcctNum, name, BeginBalance, totalDeposit, totalWithdrawal, EndBalance);
+        NSLog(@"\nAccount Number: %i \nBeginning Balance: %i \nTotal Deposit: %i \nTotal Withdrawal: %i \nEnding Balance: %i\n\n", AcctNum, BeginBalance, totalDeposit, totalWithdrawal, EndBalance);
     }
     
     
     else
     {
-        NSLog(@"\nAccount Number: %i \nName: %@ \nBeginning Balance: %i \nTotal Deposit: %i \nTotal Withdrawal: %i \nEnding Balance: %i \n**Account is Overdrawn**\n\n", AcctNum, name, BeginBalance, totalDeposit, totalWithdrawal, EndBalance);
+        NSLog(@"\nAccount Number: %i \nBeginning Balance: %i \nTotal Deposit: %i \nTotal Withdrawal: %i \nEnding Balance: %i \n**Account is Overdrawn**\n\n", AcctNum, BeginBalance, totalDeposit, totalWithdrawal, EndBalance);
     }
 }
 
-//define AddDeposit method
+
 -(void) AddDeposit: (int) d
 {
     EndBalance = BeginBalance + d;
@@ -79,6 +123,39 @@
     EndBalance = EndBalance - w;
 }
 
+
+@end
+
+
+@implementation: Savings
+
+@synthesize interestRate, interest, averageBalance;
+
+-(void) printSavings
+{
+    [Account printAccount];
+    
+    NSLog(@"Type of Account:   Interest Rate: @.02f Interest: .02f", interestRate, interest)
+}
+
+-(void) computeAverageBalance
+{
+    averageBalance = (EndBalance +BeginBalance)/2;
+}
+
+-(void) computeInterest
+{
+    interest = interestRate * averageBalance / 12;
+}
+
+@end
+
+
+
+
+@implementation: Checking
+
+@synthesize
 
 @end
 
