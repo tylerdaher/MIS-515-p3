@@ -1,2 +1,203 @@
-Main Program
-TEST
+//
+//  Account.h
+//  Project3
+//
+//  Created by macuser on 3/19/13.
+//  Copyright (c) 2013 macuser. All rights reserved.
+//
+
+#import <Foundation/Foundation.h>
+
+
+//--- @interface section---
+
+
+@interface Account: NSObject
+
+//define property variables
+@property int Withdrawal, Deposit, BeginBalance, EndBalance, AcctNum, TransactionCode, totalWithdrawal, totalDeposit;
+@property (nonatomic, copy) NSString *name;
+
+//declare methods
+-(void) print;
+-(void) AddDeposit: (int) d;
+-(void) SubtractWithdrawal: (int) w;
+-(int) AddTotalDeposit: (int) D;
+-(int) SubtractTotalWithdrawal: (int) W;
+
+
+@end
+
+
+
+//
+//  Account.m
+//  Project3
+//
+//  Created by macuser on 3/19/13.
+//  Copyright (c) 2013 macuser. All rights reserved.
+//
+
+#import "Account.h"
+
+//---@implementation section---
+
+
+
+@implementation Account
+
+//synthesize variables
+@synthesize Withdrawal, Deposit, BeginBalance, EndBalance, AcctNum, TransactionCode, totalDeposit, totalWithdrawal;
+@synthesize name;
+
+//define print method
+-(void) print
+{
+    
+    if (EndBalance > 0)
+    {
+        NSLog(@"\nAccount Number: %i \nName: %@ \nBeginning Balance: %i \nTotal Deposit: %i \nTotal Withdrawal: %i \nEnding Balance: %i\n\n", AcctNum, name, BeginBalance, totalDeposit, totalWithdrawal, EndBalance);
+    }
+    
+    
+    else
+    {
+        NSLog(@"\nAccount Number: %i \nName: %@ \nBeginning Balance: %i \nTotal Deposit: %i \nTotal Withdrawal: %i \nEnding Balance: %i \n**Account is Overdrawn**\n\n", AcctNum, name, BeginBalance, totalDeposit, totalWithdrawal, EndBalance);
+    }
+}
+
+//define AddDeposit method
+-(void) AddDeposit: (int) d
+{
+    EndBalance = BeginBalance + d;
+}
+
+
+//define SubtractWithdrawal
+-(void) SubtractWithdrawal: (int) w
+{
+    EndBalance = EndBalance - w;
+}
+
+
+@end
+
+
+//
+//  main.m
+//  Project3
+//
+//  Created by macuser on 3/19/13.
+//  Copyright (c) 2013 macuser. All rights reserved.
+//
+
+#import "Account.h"
+
+int main(int argc, const char * argv[])
+{
+    
+    @autoreleasepool {
+        
+        
+        //Declare local variables for processing
+        int i, acctnumber, begbal, transcode;
+        
+        //Create 4 account instances
+        Account *acct1;
+        Account *acct2;
+        Account *acct3;
+        Account *acct4;
+        
+        //Declare local variables for processing
+        int totwithdrawal = 0, totdeposit = 0, locdeposit = 0, locwithdrawal = 0;
+        
+        
+        //Begin For Loop
+        for (i=1; i<5; ++i) {
+            //Create acct instance
+            Account *acct = [[Account alloc] init];
+            
+            
+            //User input Account Number
+            NSLog(@"Input Account Number: ");
+            scanf("%i", &acctnumber);
+            acct.AcctNum = acctnumber;
+            
+            //User input Beginning Balance
+            NSLog(@"Input Beginning Balance: ");
+            scanf("%i", &begbal);
+            acct.BeginBalance = begbal;
+            
+            //User input Transaction Code
+            NSLog(@"Input '1' for Deposit or '-1' for Withdrawal or '0' to Exit");
+            scanf("%i", &transcode);
+            acct.TransactionCode = transcode;
+            
+            //Start While Loop
+            while (acct.TransactionCode != 0)
+            {
+                //Check if transcode is for deposit
+                if (transcode == 1)
+                {
+                    //User input deposit amount
+                    NSLog(@"Input Deposit Amount: ");
+                    scanf("%i", &locdeposit);
+                    totdeposit += locdeposit;
+                }
+                
+                //check if transcode is for withdrawal
+                if (transcode == -1)
+                {
+                    //User input withdrawal amount
+                    NSLog(@"Input Withdrawal Amount: ");
+                    scanf("%i", &locwithdrawal);
+                    totwithdrawal += locwithdrawal;
+                }
+                
+                //User input next transaction code
+                NSLog(@"Input '1' for Deposit or '-1' for Withdrawal or '0' to Exit");
+                scanf("%i", &transcode);
+                acct.TransactionCode = transcode;
+                
+            }//end while loop
+            
+            //Set acct variable equal to local variables
+            acct.totalDeposit = totdeposit;
+            acct.totalWithdrawal = totwithdrawal;
+            
+            //Add total deposit and subtract total withdrawal from balance
+            [acct AddDeposit: acct.totalDeposit];
+            [acct SubtractWithdrawal: acct.totalWithdrawal];
+            
+            
+            //set instances equal to unique instance and hard code names
+            if (i==1)
+                acct1 = acct;
+            acct1.name = @"Nobert, Pat";
+            if (i==2)
+                acct2 = acct;
+            acct2.name = @"Lopez, Andy";
+            if (i==3)
+                acct3 = acct;
+            acct3.name = @"Pham, Debby";
+            if (i==4)
+                acct4 = acct;
+            acct4.name = @"Crown, Renee";
+            
+            //reset local variables
+            totdeposit = 0;
+            totwithdrawal = 0;
+        }//end for loop
+        
+        //print account info
+        [acct1 print];
+        [acct2 print];
+        [acct3 print];
+        [acct4 print];
+    }
+    
+    return 0;
+    
+}
+
+
